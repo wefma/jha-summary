@@ -126,4 +126,4 @@ if __name__ == "__main__":
         insert_output_from_sheets(output, response)
     output = sort_output(output)
     with open(f"output/jha-scores.json", "w", encoding="utf-8") as f:
-        f.write(json.dumps(output, indent=2, ensure_ascii=False))
+        f.write(json.dumps(output, ensure_ascii=False))
