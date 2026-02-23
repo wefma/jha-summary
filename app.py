@@ -60,15 +60,70 @@ def fetch_games(config, spread_sheet_id, sheets):
 
     url = f"{url}?{query_params[:-1]}"  # Remove trailing '&'
     parsed_response = request_google_spread_sheet(url)
-    return parsed_response
+    output = {}
+    for value_range in parsed_response["valueRanges"]:
+        sheet_title = value_range["range"].split("!")[0]
+        values = []
+        for value in value_range["values"][3:]:
+            if value == [] or len(value) < 2 or value[0] == "":
+                logger.info(
+                    f"Skipping empty or invalid row in sheet '{sheet_title}': {value}"
+                )
+                break
+            values.append(
+                {
+                    "game_title": value[0] if len(value) > 0 else "",
+                    "department": value[1] if len(value) > 1 else "",
+                    "score": value[2] if len(value) > 2 else "",
+                    "score_name": value[3] if len(value) > 3 else "",
+                    "notes": value[4] if len(value) > 4 else "",
+                    "game_center": value[5] if len(value) > 5 else "",
+                }
+            )
+        output[sheet_title] = values
+    return output
+
+
+def insert_output_from_sheets(output, sheets):
+    for date in sheets:
+        logger.info(f"Processing sheet: {date}")
+        logger.debug(f"Sheet data: {sheets[date]}")
+        for entry in sheets[date]:
+            game_title = entry["game_title"]
+            if game_title not in output:
+                output[game_title] = {}
+            if entry["department"] not in output[game_title]:
+                output[game_title][entry["department"]] = []
+            output[game_title][entry["department"]].append(
+                {
+                    "score": entry["score"],
+                    "score_name": entry["score_name"],
+                    "notes": entry["notes"],
+                    "game_center": entry["game_center"],
+                    "date": date,
+                }
+            )
+
+
+def sort_output(output):
+    for game_title in output.keys():
+        logger.debug(f"Sorting entries for game: {output[game_title]}")
+        for department in output[game_title].keys():
+            output[game_title][department] = sorted(
+                output[game_title][department], key=lambda x: x["date"], reverse=True
+            )
+    return output
 
 
 if __name__ == "__main__":
     config = load_config()
     logger.info(f"Loaded config: {config}")
+    output = {}
     for spread_sheet_id in config["spread_sheet_ids"]:
         logger.info(f"Processing spreadsheet ID: {spread_sheet_id}")
         sheets = fetch_sheets(spread_sheet_id)
         response = fetch_games(config, spread_sheet_id, sheets)
-        with open(f"{spread_sheet_id}.json", "w", encoding="utf-8") as f:
-            f.write(json.dumps(response, indent=2, ensure_ascii=False))
+        insert_output_from_sheets(output, response)
+    output = sort_output(output)
+    with open(f"jha-scores.json", "w", encoding="utf-8") as f:
+        f.write(json.dumps(output, indent=2, ensure_ascii=False))
