@@ -125,5 +125,5 @@ if __name__ == "__main__":
         response = fetch_games(config, spread_sheet_id, sheets)
         insert_output_from_sheets(output, response)
     output = sort_output(output)
-    with open(f"jha-scores.json", "w", encoding="utf-8") as f:
+    with open(f"output/jha-scores.json", "w", encoding="utf-8") as f:
         f.write(json.dumps(output, indent=2, ensure_ascii=False))
