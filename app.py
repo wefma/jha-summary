@@ -4,6 +4,7 @@ import yaml
 import os
 import requests
 import json
+import datetime
 
 init_logger()
 
@@ -125,5 +126,9 @@ if __name__ == "__main__":
         response = fetch_games(config, spread_sheet_id, sheets)
         insert_output_from_sheets(output, response)
     output = sort_output(output)
+    output = {
+        "updated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "jha-data": output,
+    }
     with open(f"output/jha-scores.json", "w", encoding="utf-8") as f:
         f.write(json.dumps(output, ensure_ascii=False))
