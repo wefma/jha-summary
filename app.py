@@ -128,7 +128,7 @@ if __name__ == "__main__":
     output = sort_output(output)
     output = {
         "updated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-        "jha-data": output,
+        "jha_summary": output,
     }
     with open(f"output/jha-scores.json", "w", encoding="utf-8") as f:
         f.write(json.dumps(output, ensure_ascii=False))
