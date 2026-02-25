@@ -131,4 +131,4 @@ if __name__ == "__main__":
         "jha_summary": output,
     }
     with open(f"output/jha-scores.json", "w", encoding="utf-8") as f:
-        f.write(json.dumps(output, ensure_ascii=False))
+        f.write(json.dumps(output, ensure_ascii=False, sort_keys=True))
