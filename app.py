@@ -101,7 +101,7 @@ def insert_output_from_sheets(output, sheets):
                     "score_name": entry["score_name"],
                     "notes": entry["notes"],
                     "game_center": entry["game_center"],
-                    "date": date,
+                    "date": date.replace("'", ""),
                 }
             )
 
