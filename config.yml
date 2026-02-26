@@ -2,3 +2,147 @@ spread_sheet_ids:
   - 1l6dEdsqxjDOSoyvnz0Zt6LgjthXKT7ag6AInjPx_b3w
   - 1eZxMbrWuUaPJRN7UnoyG8hN3jWTaSvJnSsYnValpvCw
 max_range: F100
+
+game_specific:
+  # Batsugun Exaは1.5と1.5.0で違うゲーム
+
+  - game: "アカとブルー TYPE-R"
+    departments:
+      - name: "ブルーアウル"
+        same_as:
+          - "ブルー・アウル"
+
+  - game: "アクウギャレット EXA LABEL Ver.1.0.2"
+    departments:
+      - name: "EXAレーベル"
+        same_as:
+          - "EXA レーベル"
+
+  - game: "グレート魔法大作戦"
+    departments:
+      # 公式表記は「バースデイ」だった
+      - name: "バースデイ"
+        same_as:
+          - "バースディ"
+
+  - game: "ケツイ～絆地獄たち～"
+    same_as:
+      - "ケツイ"
+
+  - game: "ザ・ハウス・オブ・ザ・デッド4"
+    same_as:
+      - "ザ・ハウス・オブ・ザ・デッド 4"
+
+  - game: "シメンソカス"
+    departments:
+      # 公式表記は『EXTRA』であり、
+      # 日本語表記はホームページ/Twitter/絵師のツイートを見ても不明だった。
+      # 決め打ちで「エクストラ」とする
+      - name: "エクストラ"
+        same_as:
+          - "エキストラ"
+  - game: "ストリートファイターゼロ3"
+    departments:
+      # 公式表記は「バーディー」だった
+      - name: "バーディー"
+        same_as:
+          - "バーディ"
+
+  # スラムダンクの『スコア』と『スコア部門』が同一部門かの判断がつかなかったので保留
+
+  - game: "ソニックウィングス リユニオン"
+    same_as:
+      - "ソニックウィングスリユニオン"
+
+  - game: "ダライアス"
+    departments:
+      - name: "V"
+        same_as:
+          - "Vゾーン"
+      - name: "Y"
+        same_as:
+          - "Yゾーン"
+
+  - game: "ダライアスバーストACEX フェイズ2"
+    same_as:
+      - "ダライアスバーストACEXフェイズ2"
+
+  # バーチャファイター eスポーツ(Ver.2.01)とバーチャファイター eスポーツ(Ver.2.0.1)が違うか不明だったので保留
+
+  # ドラゴンスピリットに『新Ver.』という部門があるのと、ドラゴンスピリット(新Ver.)
+
+  - game: "パロディウスだ!"
+    departments:
+      - name: "ツインビー・連なし"
+        same_as:
+          - "ツインビー ・連なし"
+      - name: "ツインビー・連付"
+        sanem_as:
+          - "ツインビー ・連付"
+
+  - game: "ファイナルファイト"
+    departments:
+      - name: "ガイ・連無し"
+        same_as:
+          - "ガイ・連なし"
+
+  - game: "ブランディア"
+    departments:
+      # アケアカの説明より
+      - name: "レツ・ゼン"
+        same_as:
+          - "レツゼン"
+
+  - game: "ライデンファイターズ2"
+    departments:
+      # 公式表記はBEAST WINGであり、日本語表記は不明
+      # 決め打ちでビーストウィングとする
+      - name: "ビーストウィング"
+        same_as:
+          - "ビーストウイング"
+
+  - game: "ローリングガンナー ver1.01"
+    same_as:
+      - "ローリングガンナーver1.01"
+
+  - game: "ローリングガンナー ver.1.03"
+    same_as:
+      - "ローリングガンナーver1.03"
+      - "ローリングガンナー(Ver1.03)"
+
+  - game: "上海IV 竜門飛躍(Ver .1.0.1)"
+    same_as:
+      - "上海IV竜門飛躍 Ver.1.0.1"
+
+  - game: "上海IV竜門飛躍 Ver.1.0.2"
+    same_as:
+      - "上海IV 竜門飛躍(Ver .1.0.2)"
+
+  - game: "婆裟羅2"
+    departments:
+      - name: "清瀧坊随風"
+        same_as:
+          - "清龍坊随風"
+
+  - game: "戦刃アレスタ"
+    same_as:
+      - "戦刀アレスタ"
+
+  - game: "東方スカーレットディアブロ Ver.1.1.0"
+    same_as:
+      - "東方スカーレットディアブロ (VER.1.1.0)"
+
+  - game: "空牙"
+    departments:
+      - name: "シルフ・連付き"
+        same_as:
+          - "シルフ・連付"
+
+  - game: "首領蜂"
+    departments:
+      - name: "タイプA"
+        same_as:
+          - "Aタイプ"
+      - name: "タイプB"
+        same_as:
+          - "Bタイプ"

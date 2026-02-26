@@ -101,11 +101,15 @@ def validate_string(string) -> str:
     return normalized
 
 
-def validate_game(game) -> str:
-    return validate_string(game)
+def validate_game(config, game) -> str:
+    game_alias_map = build_game_alias_map(config)
+    validated_game = validate_string(game)
+    if not game_alias_map:
+        return validated_game
+    return game_alias_map.get(validated_game, validated_game)
 
 
-def validate_department(department) -> str:
+def validate_department(config, department) -> str:
     validated_department = validate_string(department)
     department_aliases = {
         "": "-",
@@ -116,7 +120,13 @@ def validate_department(department) -> str:
         "連付": "連付き",
         "連無": "連無し",
     }
-    return department_aliases.get(validated_department, validated_department)
+    if validated_department in department_aliases:
+        return department_aliases[validated_department]
+
+    department_alias_map = build_department_alias_map(config)
+    if not department_alias_map:
+        return validated_department
+    return department_alias_map.get(validated_department, validated_department)
 
 
 def fetch_games(config, spread_sheet_id, sheets):
@@ -139,9 +149,11 @@ def fetch_games(config, spread_sheet_id, sheets):
                 break
             values.append(
                 {
-                    "game_title": validate_game(value[0]) if len(value) > 0 else "",
+                    "game_title": (
+                        validate_game(config, value[0]) if len(value) > 0 else ""
+                    ),
                     "department": (
-                        validate_department(value[1]) if len(value) > 1 else ""
+                        validate_department(config, value[1]) if len(value) > 1 else ""
                     ),
                     "score": value[2] if len(value) > 2 else "",
                     "score_name": value[3] if len(value) > 3 else "",
@@ -151,6 +163,25 @@ def fetch_games(config, spread_sheet_id, sheets):
             )
         output[sheet_title] = values
     return output
+
+
+def build_game_alias_map(config: dict) -> dict[str, str]:
+    alias_map: dict[str, str] = {}
+    for entry in config.get("game_specific", []):
+        canonical_name = validate_string(entry.get("game", ""))
+        for alias in entry.get("same_as", []) or []:
+            alias_map[validate_string(alias)] = canonical_name
+    return alias_map
+
+
+def build_department_alias_map(config: dict) -> dict[str, str]:
+    alias_map: dict[str, str] = {}
+    for entry in config.get("game_specific", []):
+        for department in entry.get("departments", []) or []:
+            canonical_name = validate_string(department.get("name", ""))
+            for alias in department.get("same_as", []) or []:
+                alias_map[validate_string(alias)] = canonical_name
+    return alias_map
 
 
 def insert_output_from_sheets(output, sheets):
