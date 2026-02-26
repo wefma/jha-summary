@@ -5,6 +5,7 @@ import os
 import requests
 import json
 import datetime
+import re
 
 init_logger()
 
@@ -53,6 +54,37 @@ def fetch_sheets(spreadsheet_id) -> list[dict[str, str]]:
     return sheet_ids
 
 
+# 変換する文字列のマッピング
+FULL_WIDTH_TRANSLATION = {
+    # 大文字の A-Z
+    **{ord("Ａ") + i: ord("A") + i for i in range(26)},
+    # 小文字の a-z
+    **{ord("ａ") + i: ord("a") + i for i in range(26)},
+    # 全角スペース
+    ord("　"): ord(" "),
+    # 全角のカッコ
+    ord("（"): ord("("),
+    ord("）"): ord(")"),
+}
+
+
+def validate_string(string) -> str:
+    if string is None:
+        return ""
+
+    normalized = str(string).translate(FULL_WIDTH_TRANSLATION)
+    normalized = re.sub(r" {2,}", " ", normalized)
+    return normalized.rstrip(" ")
+
+
+def validate_game(game) -> str:
+    return validate_string(game)
+
+
+def validate_department(department) -> str:
+    return validate_string(department)
+
+
 def fetch_games(config, spread_sheet_id, sheets):
     url = f"https://sheets.googleapis.com/v4/spreadsheets/{spread_sheet_id}/values:batchGet"
     query_params = ""
@@ -73,8 +105,10 @@ def fetch_games(config, spread_sheet_id, sheets):
                 break
             values.append(
                 {
-                    "game_title": value[0] if len(value) > 0 else "",
-                    "department": value[1] if len(value) > 1 else "",
+                    "game_title": validate_game(value[0]) if len(value) > 0 else "",
+                    "department": (
+                        validate_department(value[1]) if len(value) > 1 else ""
+                    ),
                     "score": value[2] if len(value) > 2 else "",
                     "score_name": value[3] if len(value) > 3 else "",
                     "notes": value[4] if len(value) > 4 else "",
