@@ -78,7 +78,7 @@ game_specific:
         same_as:
           - "ツインビー ・連なし"
       - name: "ツインビー・連付"
-        sanem_as:
+        same_as:
           - "ツインビー ・連付"
 
   - game: "ファイナルファイト"
