@@ -6,6 +6,7 @@ import requests
 import json
 import datetime
 import re
+import unicodedata
 
 init_logger()
 
@@ -69,6 +70,8 @@ FULL_WIDTH_TRANSLATION = {
     ord("）"): ord(")"),
     # 全角のハイフン
     ord("－"): ord("-"),
+    # マイナス
+    ord("−"): ord("-"),
     # 全角のアンダースコア
     ord("＿"): ord("_"),
     # 全角のコロン
@@ -82,7 +85,7 @@ FULL_WIDTH_TRANSLATION = {
     # 全角のスラッシュ
     ord("／"): ord("/"),
     # 全角チルダと全角波ダッシュ
-    ord("～"): ord("〜"),
+    ord("〜"): ord("～"),
 }
 
 
@@ -91,12 +94,10 @@ def validate_string(string) -> str:
         return ""
 
     normalized = str(string).translate(FULL_WIDTH_TRANSLATION)
+    normalized = unicodedata.normalize("NFC", normalized)
     normalized = re.sub(r" {2,}", " ", normalized)
     normalized = normalized.rstrip(" ")
 
-    # 単一部門の場合ハイフンと空文字がある。
-    if normalized == "":
-        return "-"
     return normalized
 
 
@@ -105,7 +106,17 @@ def validate_game(game) -> str:
 
 
 def validate_department(department) -> str:
-    return validate_string(department)
+    validated_department = validate_string(department)
+    department_aliases = {
+        "": "-",
+        "部門無し": "-",
+        "なし": "-",
+        "連なし": "連無し",
+        "連付き": "連付き",
+        "連付": "連付き",
+        "連無": "連無し",
+    }
+    return department_aliases.get(validated_department, validated_department)
 
 
 def fetch_games(config, spread_sheet_id, sheets):
