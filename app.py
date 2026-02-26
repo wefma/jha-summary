@@ -92,7 +92,12 @@ def validate_string(string) -> str:
 
     normalized = str(string).translate(FULL_WIDTH_TRANSLATION)
     normalized = re.sub(r" {2,}", " ", normalized)
-    return normalized.rstrip(" ")
+    normalized = normalized.rstrip(" ")
+
+    # 単一部門の場合ハイフンと空文字がある。
+    if normalized == "":
+        return "-"
+    return normalized
 
 
 def validate_game(game) -> str:
