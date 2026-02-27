@@ -113,6 +113,7 @@ def validate_department(config, department) -> str:
     validated_department = validate_string(department)
     department_aliases = {
         "": "-",
+        "部門なし": "-",
         "部門無し": "-",
         "なし": "-",
         "連なし": "連無し",
