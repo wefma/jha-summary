@@ -170,7 +170,7 @@ def build_game_alias_map(config: dict) -> dict[str, str]:
     alias_map: dict[str, str] = {}
     for entry in config.get("game_specific", []):
         canonical_name = validate_string(entry.get("game", ""))
-        for alias in entry.get("same_as", []) or []:
+        for alias in entry.get("normalized_from", []) or []:
             alias_map[validate_string(alias)] = canonical_name
     return alias_map
 
@@ -180,7 +180,7 @@ def build_department_alias_map(config: dict) -> dict[str, str]:
     for entry in config.get("game_specific", []):
         for department in entry.get("departments", []) or []:
             canonical_name = validate_string(department.get("name", ""))
-            for alias in department.get("same_as", []) or []:
+            for alias in department.get("normalized_from", []) or []:
                 alias_map[validate_string(alias)] = canonical_name
     return alias_map
 
