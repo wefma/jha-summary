@@ -101,33 +101,19 @@ def validate_string(string) -> str:
     return normalized
 
 
+def validate_with_alias_map(value, alias_map: dict[str, str]) -> str:
+    validated_value = validate_string(value)
+    if not alias_map:
+        return validated_value
+    return alias_map.get(validated_value, validated_value)
+
+
 def validate_game(config, game) -> str:
-    game_alias_map = build_game_alias_map(config)
-    validated_game = validate_string(game)
-    if not game_alias_map:
-        return validated_game
-    return game_alias_map.get(validated_game, validated_game)
+    return validate_with_alias_map(game, build_game_alias_map(config))
 
 
 def validate_department(config, department) -> str:
-    validated_department = validate_string(department)
-    department_aliases = {
-        "": "-",
-        "部門なし": "-",
-        "部門無し": "-",
-        "なし": "-",
-        "連なし": "連無し",
-        "連付き": "連付き",
-        "連付": "連付き",
-        "連無": "連無し",
-    }
-    if validated_department in department_aliases:
-        return department_aliases[validated_department]
-
-    department_alias_map = build_department_alias_map(config)
-    if not department_alias_map:
-        return validated_department
-    return department_alias_map.get(validated_department, validated_department)
+    return validate_with_alias_map(department, build_department_alias_map(config))
 
 
 def fetch_games(config, spread_sheet_id, sheets):
@@ -168,8 +154,8 @@ def fetch_games(config, spread_sheet_id, sheets):
 
 def build_game_alias_map(config: dict) -> dict[str, str]:
     alias_map: dict[str, str] = {}
-    for entry in config.get("game_specific", []):
-        canonical_name = validate_string(entry.get("game", ""))
+    for entry in config.get("games", []):
+        canonical_name = validate_string(entry.get("name", ""))
         for alias in entry.get("normalized_from", []) or []:
             alias_map[validate_string(alias)] = canonical_name
     return alias_map
@@ -177,7 +163,11 @@ def build_game_alias_map(config: dict) -> dict[str, str]:
 
 def build_department_alias_map(config: dict) -> dict[str, str]:
     alias_map: dict[str, str] = {}
-    for entry in config.get("game_specific", []):
+    for department in config.get("departments", []) or []:
+        canonical_name = validate_string(department.get("name", ""))
+        for alias in department.get("normalized_from", []) or []:
+            alias_map[validate_string(alias)] = canonical_name
+    for entry in config.get("games", []):
         for department in entry.get("departments", []) or []:
             canonical_name = validate_string(department.get("name", ""))
             for alias in department.get("normalized_from", []) or []:

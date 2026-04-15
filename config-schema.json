@@ -16,24 +16,31 @@
       "type": "string",
       "pattern": "^[A-Z]+\\d+$"
     },
-    "game_specific": {
+    "departments": {
       "type": "array",
       "items": {
-        "$ref": "#/definitions/gameSpecificEntry"
+        "$ref": "#/definitions/departmentEntry"
+      }
+    },
+    "games": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/gameEntry"
       }
     }
   },
   "required": [
     "spread_sheet_ids",
     "max_range",
-    "game_specific"
+    "departments",
+    "games"
   ],
   "additionalProperties": false,
   "definitions": {
-    "gameSpecificEntry": {
+    "gameEntry": {
       "type": "object",
       "properties": {
-        "game": {
+        "name": {
           "type": "string",
           "minLength": 1
         },
@@ -51,7 +58,7 @@
         }
       },
       "required": [
-        "game"
+        "name"
       ],
       "additionalProperties": false
     },
@@ -59,8 +66,7 @@
       "type": "object",
       "properties": {
         "name": {
-          "type": "string",
-          "minLength": 1
+          "type": "string"
         },
         "normalized_from": {
           "type": "array",
