@@ -17,7 +17,7 @@ departments:
   - name: "連付き"
     normalized_from:
       - "連付"
-      - "連付き"
+      - "連つき"
 
 games:
   # Batsugun Exaは1.5と1.5.0で違うゲーム
